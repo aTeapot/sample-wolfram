@@ -1,9 +1,12 @@
-radiusScale = 30000;
-planets = PlanetData[PlanetData[], {"Radius", "AverageOrbitDistance", "Color"}];
-planetSphere[{radius_, orbite_, color_}] :=
-  {
-    FromEntity[color],
-    Sphere[{orbite[[1]], 0, 0}, radius[[1]] / radiusScale]
-  }
-spheres = Flatten[planetSphere /@ planets, 1];
-CloudDeploy[Graphics3D[spheres]]
+drawPlanets := Manipulate[
+  Graphics3D[Flatten[(
+    Function[{radius, orbite, color},
+      {
+        FromEntity[color],
+        Sphere[{orbite[[1]], 0, 0}, radius[[1]] / radiusScale]
+      }] @@@ PlanetData[PlanetData[], {"Radius", "AverageOrbitDistance", "Color"}]
+  ), 1]],
+  {{radiusScale, 30000}, 20000, 60000}
+]
+
+CloudDeploy[drawPlanets, Permissions -> "Public"]
